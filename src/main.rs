@@ -12,7 +12,6 @@ use rocket_contrib::templates::Template;
 #[derive(Serialize)]
 struct TemplateContext {
   title: String,
-  parent: &'static str,
 }
 
 #[get("/")]
@@ -26,13 +25,7 @@ fn index(mut cookies: Cookies) -> Template {
 
   cookies.add(cookie);
 
-  Template::render(
-    "index",
-    &TemplateContext {
-      title: intval,
-      parent: "layout",
-    },
-  )
+  Template::render("index", &TemplateContext { title: intval })
 }
 
 fn main() {
