@@ -1,8 +1,8 @@
+use serde_derive::{Deserialize, Serialize};
 use std::default::Default;
 use std::error::Error;
 use std::fs;
 use std::path::Path;
-extern crate serde_json;
 
 #[derive(Deserialize, Serialize, Clone)]
 pub struct Discipline {

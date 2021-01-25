@@ -1,17 +1,12 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-#[macro_use]
-extern crate serde_derive;
-#[macro_use]
-extern crate rocket;
-extern crate rocket_contrib;
-use rocket::http::Cookie;
-use rocket::http::Cookies;
+#![feature(decl_macro)]
+use rocket::http::{Cookie, Cookies};
+use rocket::{get, routes};
+use rocket_contrib::templates::Template;
+use serde_derive::Serialize;
 use std::path::Path;
-const DB_PATH: &str = "./db";
-
 mod race_struct;
 
-use rocket_contrib::templates::Template;
+const DB_PATH: &str = "./db";
 
 #[derive(Serialize)]
 struct IndexContext {
