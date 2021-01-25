@@ -49,6 +49,9 @@ fn read_race(path: &std::path::Path) -> Result<Race, Box<dyn Error>> {
   })
 }
 
+/// Print to console if result has a error
+///
+/// Returns Some() if Ok and None if Err
 fn race_unwrap_to_console(
   result: Result<Race, Box<dyn Error>>,
 ) -> Option<Race> {
