@@ -19,19 +19,19 @@ pub struct Race {
   #[serde(rename = "CompetitionId")]
   id: u64,
   #[serde(rename = "CompetitionName")]
-  event_name: String,
+  event_name: Option<String>,
   #[serde(rename = "SyncPoint")]
   sync_point: u64,
   #[serde(rename = "TimeStamp")]
   timestamp: u64,
   #[serde(rename = "Gates")]
-  gates: Vec<u32>,
+  gates: Option<Vec<u32>>,
   #[serde(rename = "Penalties")]
-  penalties: Vec<u32>,
+  penalties: Option<Vec<u32>>,
   #[serde(rename = "Crews")]
-  crews: Vec<u32>,
+  crews: Option<Vec<u32>>,
   #[serde(rename = "Disciplines")]
-  discipline: Vec<Discipline>,
+  discipline: Option<Vec<Discipline>>,
 }
 
 fn read_race(path: &std::path::Path) -> Result<Race, Box<dyn Error>> {
