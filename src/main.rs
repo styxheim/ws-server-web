@@ -14,14 +14,13 @@ mod race_struct;
 use rocket_contrib::templates::Template;
 
 #[derive(Serialize)]
-struct TemplateContext {
+struct IndexContext {
+  race_list: Vec<race_struct::Race>,
   title: String,
 }
 
 #[get("/")]
 fn index(mut cookies: Cookies) -> Template {
-  let _events = race_struct::list_races(&Path::new(DB_PATH));
-
   let cookie = Cookie::build("int", "val").finish();
   let intval = cookies
     .get("int")
@@ -31,7 +30,13 @@ fn index(mut cookies: Cookies) -> Template {
 
   cookies.add(cookie);
 
-  Template::render("index", &TemplateContext { title: intval })
+  Template::render(
+    "index",
+    &IndexContext {
+      race_list: race_struct::list_races(&Path::new(DB_PATH)),
+      title: intval,
+    },
+  )
 }
 
 fn main() {

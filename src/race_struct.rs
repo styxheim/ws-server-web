@@ -4,7 +4,7 @@ use std::fs;
 use std::path::Path;
 extern crate serde_json;
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct Discipline {
   #[serde(rename = "Id")]
   id: u32,
@@ -14,12 +14,12 @@ pub struct Discipline {
   gates: Vec<u32>,
 }
 
-#[derive(Deserialize, Serialize, Default)]
+#[derive(Deserialize, Serialize, Default, Clone)]
 pub struct Race {
   #[serde(rename = "CompetitionId")]
-  id: u64,
+  pub id: u64,
   #[serde(rename = "CompetitionName")]
-  event_name: Option<String>,
+  pub name: Option<String>,
   #[serde(rename = "SyncPoint")]
   sync_point: u64,
   #[serde(rename = "TimeStamp")]

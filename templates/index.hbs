@@ -1,6 +1,9 @@
 {{#*inline "page"}}
 
-Hello!
+<h3>race_list</h3>
+{{#each race_list}}
+<p><b>{{@index}}.</b> ({{this.CompetitionId}})  {{this.CompetitionName}}</p>
+{{/each}}
 
 {{/inline}}
 {{~> layout ~}}
