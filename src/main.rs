@@ -6,6 +6,10 @@ extern crate rocket;
 extern crate rocket_contrib;
 use rocket::http::Cookie;
 use rocket::http::Cookies;
+use std::path::Path;
+const DB_PATH: &str = "./db";
+
+mod race_struct;
 
 use rocket_contrib::templates::Template;
 
@@ -16,6 +20,8 @@ struct TemplateContext {
 
 #[get("/")]
 fn index(mut cookies: Cookies) -> Template {
+  let _events = race_struct::list_races(&Path::new(DB_PATH));
+
   let cookie = Cookie::build("int", "val").finish();
   let intval = cookies
     .get("int")
