@@ -2,7 +2,9 @@
 
 <h3>race_list</h3>
 {{#each race_list}}
-<p><b>{{@index}}.</b> ({{this.CompetitionId}})  {{this.CompetitionName}}</p>
+<p>
+  <a href="race/{{this.CompetitionId}}">{{this.CompetitionName}}</a>
+</p>
 {{/each}}
 
 {{/inline}}

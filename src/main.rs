@@ -9,6 +9,21 @@ mod race_struct;
 const DB_PATH: &str = "./db";
 
 #[derive(Serialize)]
+struct RaceContext {
+  title: String,
+}
+
+#[get("/race/<race_id>")]
+fn race(race_id: u64) -> Template {
+  Template::render(
+    "race",
+    &RaceContext {
+      title: format!("Race id {}", race_id).into(),
+    },
+  )
+}
+
+#[derive(Serialize)]
 struct IndexContext {
   race_list: Vec<race_struct::Race>,
   title: String,
@@ -36,7 +51,7 @@ fn index(mut cookies: Cookies) -> Template {
 
 fn main() {
   rocket::ignite()
-    .mount("/", routes![index])
+    .mount("/", routes![index, race])
     .attach(Template::fairing())
     .launch();
 }
