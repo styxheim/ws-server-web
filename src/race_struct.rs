@@ -21,7 +21,7 @@ pub struct Race {
   #[serde(rename = "CompetitionName")]
   pub name: String,
   #[serde(rename = "SyncPoint")]
-  sync_point: u64,
+  sync_point: Option<u64>,
   #[serde(rename = "TimeStamp")]
   timestamp: u64,
   #[serde(rename = "Gates")]
