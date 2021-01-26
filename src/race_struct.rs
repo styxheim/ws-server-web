@@ -19,7 +19,7 @@ pub struct Race {
   #[serde(rename = "CompetitionId")]
   pub id: u64,
   #[serde(rename = "CompetitionName")]
-  pub name: Option<String>,
+  pub name: String,
   #[serde(rename = "SyncPoint")]
   sync_point: u64,
   #[serde(rename = "TimeStamp")]
