@@ -1,7 +1,5 @@
-#![feature(decl_macro)]
-use rocket::http::{Cookie, Cookies};
-use rocket::{get, routes};
-use rocket_contrib::templates::Template;
+use actix_web::{get, web, App, HttpResponse, HttpServer};
+use handlebars::Handlebars;
 use serde_derive::Serialize;
 use std::path::Path;
 mod race_struct;
@@ -13,14 +11,21 @@ struct RaceContext {
   title: String,
 }
 
-#[get("/race/<race_id>")]
-fn race(race_id: u64) -> Template {
-  Template::render(
-    "race",
-    &RaceContext {
-      title: format!("Race id {}", race_id).into(),
-    },
-  )
+#[get("/race/{race_id}")]
+async fn race(
+  hb: web::Data<Handlebars<'_>>,
+  web::Path(race_id): web::Path<u64>,
+) -> HttpResponse {
+  let body = hb
+    .render(
+      "race",
+      &RaceContext {
+        title: format!("Race id {}", race_id).into(),
+      },
+    )
+    .unwrap();
+
+  HttpResponse::Ok().body(body)
 }
 
 #[derive(Serialize)]
@@ -30,28 +35,38 @@ struct IndexContext {
 }
 
 #[get("/")]
-fn index(mut cookies: Cookies) -> Template {
-  let cookie = Cookie::build("int", "val").finish();
-  let intval = cookies
-    .get("int")
-    .unwrap_or(&Cookie::build("int", "N-O-N-E").finish())
-    .value()
-    .to_string();
+async fn index(hb: web::Data<Handlebars<'_>>) -> HttpResponse {
+  let body = hb
+    .render(
+      "index",
+      &IndexContext {
+        race_list: race_struct::list_races(&Path::new(DB_PATH)),
+        title: "0".to_string(),
+      },
+    )
+    .unwrap();
 
-  cookies.add(cookie);
-
-  Template::render(
-    "index",
-    &IndexContext {
-      race_list: race_struct::list_races(&Path::new(DB_PATH)),
-      title: intval,
-    },
-  )
+  HttpResponse::Ok().body(body)
 }
 
-fn main() {
-  rocket::ignite()
-    .mount("/", routes![index, race])
-    .attach(Template::fairing())
-    .launch();
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+  let bind_string = "0.0.0.0:80";
+  println!("Listen on {}", bind_string);
+
+  let mut handlebars = Handlebars::new();
+  handlebars
+    .register_templates_directory(".hbs", "./templates")
+    .unwrap();
+  let handlebars_ref = web::Data::new(handlebars);
+
+  HttpServer::new(move || {
+    App::new()
+      .app_data(handlebars_ref.clone())
+      .service(index)
+      .service(race)
+  })
+  .bind(bind_string)?
+  .run()
+  .await
 }
